@@ -4,7 +4,10 @@ const express = require('express')
 const app = express()
 const cors = require('cors')
 const passport = require('passport')
+const usersRouter = require('./routes/usersRouter')
+const indexRouter = require('./routes/indexRouter')
 const authRouter = require('./routes/authRouter')
+const isAuth = require('./auth/isAuth')
 
 app.use(cors())
 app.use(express.json())
@@ -12,7 +15,9 @@ app.use(express.urlencoded({ extended: true }))
 
 app.use(passport.initialize())
 
-app.use('/', authRouter)
+app.use('/auth', isAuth, authRouter)
+app.use('/users', usersRouter)
+app.use('/', indexRouter)
 
 app.use((err, req, res, next) => {
   console.log(err)

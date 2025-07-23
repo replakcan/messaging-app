@@ -1,69 +1,150 @@
-const generateToken = require('../auth/generateToken')
-const { UnauthorizedError } = require('../errors/customErrors')
+const { ForbiddenError } = require('../errors/customErrors')
 const prisma = require('../lib/prisma')
-const bcrypt = require('bcryptjs')
 
-exports.usersLoginPost = async (req, res, next) => {
-  const { username, password } = req.body
+exports.getUserProfile = async (req, res, next) => {
+  const { user } = req
 
   try {
-    const user = await prisma.user.findFirst({
-      where: {
-        phone: username,
+    const authUser = await prisma.user.findFirstOrThrow({
+      where: { id: user.id },
+      include: {
+        friends: true,
+        adminOfGroups: true,
+        memberOfGroups: true,
+        messages_sent: true,
+        messages_recieved: true,
       },
+      omit: { password: true },
     })
 
-    if (!user) throw new UnauthorizedError('Invalid credentials')
-
-    const match = await bcrypt.compare(password, user.password)
-
-    if (!match) throw new UnauthorizedError('Invalid credentials')
-
-    const token = generateToken(user)
-
-    res.json({ token })
+    res.json(authUser)
   } catch (error) {
     next(error)
   }
 }
 
-exports.usersRegisterPost = async (req, res, next) => {
-  const { first_name, last_name, age, email, password, phone } = req.body
+exports.getUserFriends = async (req, res, next) => {
+  const { user } = req
 
   try {
-    const hashedPassword = await bcrypt.hash(password, 10)
+    const userFriends = await prisma.user.findFirstOrThrow({
+      where: { id: user.id },
+      select: { friends: true },
+    })
 
-    const newUser = await prisma.user.create({
+    res.json(userFriends)
+  } catch (error) {
+    next(error)
+  }
+}
+
+exports.getUserGroups = async (req, res, next) => {
+  const { user } = req
+
+  try {
+    const groups = await prisma.user.findFirstOrThrow({
+      where: { id: user.id },
+      select: { adminOfGroups: true, memberOfGroups: true },
+    })
+
+    res.json(groups)
+  } catch (error) {
+    next(error)
+  }
+}
+
+exports.getAllMessages = async (req, res, next) => {
+  const { user } = req
+
+  try {
+    const messages = await prisma.user.findFirstOrThrow({
+      where: { id: user.id },
+      select: {
+        messages_recieved: true,
+        messages_sent: true,
+      },
+    })
+
+    const allMessages = [...messages.messages_recieved, ...messages.messages_sent]
+
+    const sortedMessages = allMessages.sort((a, b) => a.createdAt - b.createdAt)
+
+    res.json(sortedMessages)
+  } catch (error) {
+    next(error)
+  }
+}
+
+exports.postNewMessage = async (req, res, next) => {
+  const { recieverId, text } = req.body
+  const { user } = req
+
+  try {
+    const message = await prisma.message.create({
       data: {
-        first_name,
-        last_name,
-        phone,
-        email,
-        age,
-        password: hashedPassword,
+        creatorId: user.id,
+        text,
+        recieverId,
       },
     })
 
-    res.status(201).json(newUser)
+    res.json(message)
   } catch (error) {
     next(error)
   }
 }
 
-exports.verifyCurrentUser = async (req, res, next) => {
-  const { id } = req.user
+exports.editMessage = async (req, res, next) => {
+  const { user } = req
+  const { text } = req.body
+  const { messageId } = req.params
 
   try {
-    const currentUser = await prisma.user.findFirstOrThrow({
-      where: {
-        id,
-      },
-      omit: {
-        password: true,
-      },
+    if (!text || text.trim() === '') {
+      return res.status(400).json({ error: 'Message text cannot be empty' })
+    }
+
+    const message = await prisma.message.findFirstOrThrow({
+      where: { id: messageId },
     })
 
-    res.json(currentUser)
+    if (message.creatorId !== user.id) {
+      throw new ForbiddenError('You cannot edit a message that is not yours')
+    }
+
+    if (message.text === text.trim()) {
+      return res.json(message)
+    }
+
+    const editedMessage = await prisma.message.update({
+      where: { id: messageId },
+      data: { text: text.trim() },
+    })
+
+    res.json(editedMessage)
+  } catch (error) {
+    next(error)
+  }
+}
+
+exports.deleteMessage = async (req, res, next) => {
+  const { user } = req
+  const { messageId } = req.params
+
+  try {
+    const message = await prisma.message.findFirstOrThrow({
+      where: { id: messageId },
+    })
+
+    if (message.creatorId !== user.id) {
+      throw new ForbiddenError('You cannot edit a message that is not yours')
+    }
+
+    await prisma.message.delete({
+      where: { id: messageId },
+    })
+
+    res.json({ message: 'message deleted' })
   } catch (error) {
     next(error)
   }

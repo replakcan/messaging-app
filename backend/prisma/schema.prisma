@@ -22,8 +22,8 @@ model User {
   email             String
   password          String
   phone             String
-  status            Status
-  status_message    String
+  status            Status    @default(ONLINE)
+  status_message    String?
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
   messages_sent     Message[] @relation("SentMessage")

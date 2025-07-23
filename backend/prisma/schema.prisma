@@ -1,0 +1,64 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String    @id @default(uuid())
+  first_name        String
+  last_name         String
+  age               Int
+  email             String
+  password          String
+  phone             String
+  status            Status
+  status_message    String
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  messages_sent     Message[] @relation("SentMessage")
+  messages_recieved Message[] @relation("RecievedMessage")
+  friends           User[]    @relation("UserFriends")
+  friendOf          User[]    @relation("UserFriends")
+  adminOfGroups     Group[]   @relation("GroupAdmin")
+  memberOfGroups    Group[]   @relation("GroupMember")
+}
+
+model Message {
+  id         String   @id @default(uuid())
+  creator    User     @relation("SentMessage", fields: [creatorId], references: [id])
+  creatorId  String
+  reciever   User     @relation("RecievedMessage", fields: [recieverId], references: [id])
+  recieverId String
+  text       String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Group {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  admin       User     @relation("GroupAdmin", fields: [adminId], references: [id])
+  adminId     String
+  members     User[]   @relation("GroupMember")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum Status {
+  ONLINE
+  OFFLINE
+  AWAY
+  BUSY
+}

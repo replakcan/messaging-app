@@ -1,4 +1,4 @@
-const { ForbiddenError } = require('../errors/customErrors')
+const { ForbiddenError, NotFoundError } = require('../errors/customErrors')
 const prisma = require('../lib/prisma')
 
 exports.getUserProfile = async (req, res, next) => {
@@ -23,6 +23,58 @@ exports.getUserProfile = async (req, res, next) => {
   }
 }
 
+exports.addNewFriend = async (req, res, next) => {
+  const { user } = req
+  const { contactPhone } = req.body
+
+  try {
+    const newContact = await prisma.user.findFirstOrThrow({
+      where: { phone: contactPhone },
+    })
+
+    const authUser = await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        friends: {
+          connect: [{ id: newContact.id }],
+        },
+      },
+      include: { friends: true },
+      omit: { password: true },
+    })
+
+    res.json(authUser)
+  } catch (error) {
+    next(error)
+  }
+}
+
+exports.removeExistingFriend = async (req, res, next) => {
+  const { user } = req
+  const { friendId } = req.params
+
+  try {
+    await prisma.user.findFirstOrThrow({
+      where: { id: friendId },
+    })
+
+    const authUser = await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        friends: {
+          disconnect: [{ id: friendId }],
+        },
+      },
+      include: { friends: true },
+      omit: { password: true },
+    })
+
+    res.json(authUser)
+  } catch (error) {
+    next(error)
+  }
+}
+
 exports.getUserFriends = async (req, res, next) => {
   const { user } = req
 
@@ -32,7 +84,12 @@ exports.getUserFriends = async (req, res, next) => {
       select: { friends: true },
     })
 
-    res.json(userFriends)
+    const friendsWithoutPaswords = userFriends.friends.map((friend) => {
+      const { password, ...rest } = friend
+      return rest
+    })
+
+    res.json(friendsWithoutPaswords)
   } catch (error) {
     next(error)
   }
@@ -44,10 +101,70 @@ exports.getUserGroups = async (req, res, next) => {
   try {
     const groups = await prisma.user.findFirstOrThrow({
       where: { id: user.id },
-      select: { adminOfGroups: true, memberOfGroups: true },
+      select: {
+        adminOfGroups: true,
+        memberOfGroups: true,
+      },
     })
 
     res.json(groups)
+  } catch (error) {
+    next(error)
+  }
+}
+
+exports.createNewGroup = async (req, res, next) => {
+  const { user } = req
+  const { name, description } = req.body
+
+  try {
+    const group = await prisma.group.create({
+      data: {
+        adminId: user.id,
+        name,
+        description,
+      },
+    })
+
+    res.json(group)
+  } catch (error) {
+    next(error)
+  }
+}
+
+exports.getGroupById = async (req, res, next) => {
+  const { groupId } = req.params
+
+  try {
+    const group = await prisma.group.findFirstOrThrow({
+      where: { id: groupId },
+      include: { messages: true },
+    })
+
+    res.json(group)
+  } catch (error) {
+    next(error)
+  }
+}
+
+exports.deleteGroupById = async (req, res, next) => {
+  const { groupId } = req.params
+
+  try {
+    await prisma.group.update({
+      where: { id: groupId },
+      data: {
+        members: {
+          set: [],
+        },
+      },
+    })
+
+    await prisma.group.delete({
+      where: { id: groupId },
+    })
+
+    res.json({ message: 'Group deleted successfully' })
   } catch (error) {
     next(error)
   }
@@ -75,8 +192,23 @@ exports.getAllMessages = async (req, res, next) => {
   }
 }
 
-exports.postNewMessage = async (req, res, next) => {
-  const { recieverId, text } = req.body
+exports.getMessageById = async (req, res, next) => {
+  const { messageId } = req.params
+
+  try {
+    const message = await prisma.message.findFirstOrThrow({
+      where: { id: messageId },
+    })
+
+    res.json(message)
+  } catch (error) {
+    next(error)
+  }
+}
+
+exports.postNewFriendMessage = async (req, res, next) => {
+  const { text } = req.body
+  const { recieverId } = req.params
   const { user } = req
 
   try {
@@ -86,6 +218,28 @@ exports.postNewMessage = async (req, res, next) => {
         text,
         recieverId,
       },
+      omit: { groupId: true },
+    })
+
+    res.json(message)
+  } catch (error) {
+    next(error)
+  }
+}
+
+exports.postNewGroupMessage = async (req, res, next) => {
+  const { text } = req.body
+  const { groupId } = req.params
+  const { user } = req
+
+  try {
+    const message = await prisma.message.create({
+      data: {
+        creatorId: user.id,
+        text,
+        groupId,
+      },
+      omit: { recieverId: true },
     })
 
     res.json(message)

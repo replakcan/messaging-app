@@ -2,9 +2,15 @@ const { Router } = require('express')
 const messagesRouter = Router()
 const messagesController = require('../controllers/messagesController')
 
-messagesRouter.param('messageId', messagesController.attachMessageToRequestObject)
+messagesRouter.param(
+  'messageId',
+  messagesController.attachMessageToRequestObject
+)
 
-messagesRouter.route('/').get(messagesController.getAllUserMessages).post(messagesController.createNewMessage)
+messagesRouter
+  .route('/')
+  .get(messagesController.getAllUserMessages)
+  .post(messagesController.createNewMessage)
 
 messagesRouter
   .route('/:messageId')

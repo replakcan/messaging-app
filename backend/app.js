@@ -10,6 +10,7 @@ const authRouter = require('./routes/authRouter')
 const isAuth = require('./auth/isAuth')
 const messagesRouter = require('./routes/messagesRouter')
 const groupsRouter = require('./routes/groupsRouter')
+const contactsRouter = require('./routes/contactsRouter')
 
 app.use(cors())
 app.use(express.json())
@@ -17,9 +18,10 @@ app.use(express.urlencoded({ extended: true }))
 
 app.use(passport.initialize())
 
+app.use('/auth', isAuth, authRouter)
+app.use('/contacts', isAuth, contactsRouter)
 app.use('/groups', isAuth, groupsRouter)
 app.use('/messages', isAuth, messagesRouter)
-app.use('/auth', isAuth, authRouter)
 app.use('/users', usersRouter)
 app.use('/', indexRouter)
 

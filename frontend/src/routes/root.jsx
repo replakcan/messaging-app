@@ -3,6 +3,7 @@ import ContactsContainer from '../components/contacts-container'
 import FiltersContainer from '../components/filters-container'
 import MainContainer from '../components/main-container'
 import SettingsBar from '../components/settings-bar'
+import { Outlet, useNavigate } from 'react-router'
 import { axiosInstance } from '../api/axios-instance'
 import AuthContext from '../contexts/auth-context'
 
@@ -28,11 +29,14 @@ export default function Root() {
 
   return (
     <AuthContext.Provider value={{ user }}>
-      <SettingsBar />
-      <FiltersContainer />
-      <ContactsContainer />
-      <ChatWindow />
-    </MainContainer>
+      <MainContainer>
+        <SettingsBar />
+        <FiltersContainer />
+        <ContactsContainer />
+        <div className="outlet-container">
+          <Outlet />
+        </div>
+      </MainContainer>
     </AuthContext.Provider>
   )
 }

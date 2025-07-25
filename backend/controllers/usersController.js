@@ -22,9 +22,6 @@ exports.findUserById = async (req, res, next) => {
       where: {
         id: userId,
       },
-      omit: {
-        password: true,
-      },
     })
 
     res.json(user)

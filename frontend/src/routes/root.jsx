@@ -4,6 +4,7 @@ import FiltersContainer from '../components/filters-container'
 import MainContainer from '../components/main-container'
 import SettingsBar from '../components/settings-bar'
 import { axiosInstance } from '../api/axios-instance'
+import AuthContext from '../contexts/auth-context'
 
 export default function Root() {
   const [user, setUser] = useState({})
@@ -26,11 +27,12 @@ export default function Root() {
   }, [token, navigate])
 
   return (
-    <MainContainer>
+    <AuthContext.Provider value={{ user }}>
       <SettingsBar />
       <FiltersContainer />
       <ContactsContainer />
       <ChatWindow />
     </MainContainer>
+    </AuthContext.Provider>
   )
 }

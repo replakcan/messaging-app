@@ -28,8 +28,8 @@ model User {
   updatedAt         DateTime  @updatedAt
   messages_sent     Message[] @relation("SentMessage")
   messages_recieved Message[] @relation("RecievedMessage")
-  friends           User[]    @relation("UserFriends")
-  friendOf          User[]    @relation("UserFriends")
+  contacts          User[]    @relation("UserContacts")
+  contactsOf        User[]    @relation("UserContacts")
   adminOfGroups     Group[]   @relation("GroupAdmin")
   memberOfGroups    Group[]   @relation("GroupMember")
 }

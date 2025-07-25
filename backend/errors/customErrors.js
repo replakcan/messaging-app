@@ -22,8 +22,17 @@ class UnauthorizedError extends Error {
   }
 }
 
+class ConflictError extends Error {
+  constructor(message = 'Resource already exists') {
+    super(message)
+    this.statusCode = 409
+    this.name = 'ConflictError'
+  }
+}
+
 module.exports = {
   NotFoundError,
   ForbiddenError,
   UnauthorizedError,
+  ConflictError,
 }

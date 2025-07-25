@@ -5,7 +5,7 @@
   grid-template-rows: 3fr 12fr;
 }
 
-.chat-container {
+.outlet-container {
   grid-area: 1 / 3 / -1 / -1;
   background-color: burlywood;
 }

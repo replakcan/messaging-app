@@ -70,7 +70,8 @@ exports.editMessageById = async (req, res, next) => {
   const { id: userId } = req.user
   const { text } = req.body
 
-  if (creatorId !== userId) throw new ForbiddenError('You cannot edit a message that is not yours')
+  if (creatorId !== userId)
+    throw new ForbiddenError('You cannot edit a message that is not yours')
 
   try {
     await prisma.message.update({
@@ -90,7 +91,8 @@ exports.deleteMessageById = async (req, res, next) => {
   const { id: userId } = req.user
   const { id: messageId, creatorId } = req.currentMessage
 
-  if (creatorId !== userId) throw new ForbiddenError('You cannot delete a message that is not yours')
+  if (creatorId !== userId)
+    throw new ForbiddenError('You cannot delete a message that is not yours')
 
   try {
     await prisma.message.delete({

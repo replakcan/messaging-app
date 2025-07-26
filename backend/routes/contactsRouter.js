@@ -4,7 +4,7 @@ const contactsController = require('../controllers/contactsController')
 
 contactsRouter.param(
   'contactId',
-  contactsController.attachContactToRequestObject
+  contactsController.attachContactToRequestObject,
 )
 
 contactsRouter

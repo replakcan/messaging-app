@@ -4,7 +4,7 @@ const messagesController = require('../controllers/messagesController')
 
 messagesRouter.param(
   'messageId',
-  messagesController.attachMessageToRequestObject
+  messagesController.attachMessageToRequestObject,
 )
 
 messagesRouter

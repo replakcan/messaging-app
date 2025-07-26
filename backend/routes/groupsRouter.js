@@ -27,7 +27,7 @@ groupsRouter
 
 groupsRouter.delete(
   '/:groupId/members/:memberId',
-  groupsController.removeExistingMember
+  groupsController.removeExistingMember,
 )
 
 module.exports = groupsRouter

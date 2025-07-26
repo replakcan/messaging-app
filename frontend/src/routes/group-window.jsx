@@ -55,14 +55,24 @@ export default function GroupWindow() {
       <header className="chat-header">
         <p>{group.name}</p>
         <p>
-          {group.admin?.phone}, {group.members?.map((member) => member.phone + ',')}
+          {group.admin?.phone},{' '}
+          {group.members?.map((member) => member.phone + ',')}
         </p>
       </header>
       <main className="chat">
         {messages.map((message) => {
           return (
-            <div className={message.creatorId == user.id ? 'sent-msg' : 'recieved-msg'} key={message.id}>
-              <h3>{message.creatorId == user.id ? `${user.first_name} ${user.last_name}` : ''}</h3>
+            <div
+              className={
+                message.creatorId == user.id ? 'sent-msg' : 'recieved-msg'
+              }
+              key={message.id}
+            >
+              <h3>
+                {message.creatorId == user.id
+                  ? `${user.first_name} ${user.last_name}`
+                  : ''}
+              </h3>
               <p>{message.text}</p>
             </div>
           )
@@ -71,7 +81,13 @@ export default function GroupWindow() {
       <footer className="chat-footer">
         <form onSubmit={handleSubmit}>
           <label htmlFor="text">send message</label>
-          <input type="text" name="text" id="text" value={msg.text} onChange={handleChange} />
+          <input
+            type="text"
+            name="text"
+            id="text"
+            value={msg.text}
+            onChange={handleChange}
+          />
           <button type="submit">send</button>
         </form>
       </footer>

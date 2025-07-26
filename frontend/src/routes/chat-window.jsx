@@ -43,7 +43,12 @@ export default function ChatWindow() {
       <main className="chat">
         {messages.map((message) => {
           return (
-            <div className={message.creatorId == contactId ? 'recieved-msg' : 'sent-msg'} key={message.id}>
+            <div
+              className={
+                message.creatorId == contactId ? 'recieved-msg' : 'sent-msg'
+              }
+              key={message.id}
+            >
               <h3>
                 {message.creatorId === contactId
                   ? `${contact.first_name} ${contact.last_name}`

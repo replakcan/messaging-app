@@ -62,11 +62,20 @@ exports.createNewGroup = async (req, res, next) => {
   }
 }
 
-exports.getGroupById = (req, res, next) => {
-  const { currentGroup } = req
+exports.getGroupById = async (req, res, next) => {
+  const { id } = req.currentGroup
 
   try {
-    res.json(currentGroup)
+    const group = await prisma.group.findFirstOrThrow({
+      where: { id },
+      include: {
+        members: { select: { phone: true, id: true } },
+        admin: { select: { phone: true, id: true } },
+        _count: { select: { members: true } },
+      },
+    })
+
+    res.json(group)
   } catch (error) {
     next(error)
   }

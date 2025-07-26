@@ -6,60 +6,79 @@ import AuthContext from '../contexts/auth-context'
 
 export default function ChatWindow() {
   const { user } = useContext(AuthContext)
-  const { contactId } = useParams()
-  const [contact, setContact] = useState({})
-  const [messages, setMessages] = useState([])
+  const { receiverId } = useParams()
+  const [person, setPerson] = useState({})
+  const [conversation, setConversation] = useState([])
+  const [msg, setMsg] = useState({ text: '' })
 
   useEffect(() => {
-    const fetchContact = async () => {
+    const fetchPerson = async () => {
       await axiosInstance
-        .get(`/auth/friends/${contactId}`)
-        .then((res) => setContact(res.data))
-        .catch((err) => console.log(err))
-    }
-
-    const fetchMessages = async () => {
-      await axiosInstance
-        .get(`/auth/messages/friends/${contactId}`)
+        .get(`/users/${receiverId}`)
         .then((res) => {
-          console.log(res.data)
-          setMessages(res.data)
+          setPerson(res.data)
         })
         .catch((err) => console.log(err))
     }
 
-    fetchContact()
-    fetchMessages()
-  }, [contactId])
+    const fetchConversation = async () => {
+      await axiosInstance
+        .get(`/auth/me/conversations/${receiverId}`)
+        .then((res) => setConversation(res.data))
+        .catch((err) => console.log(err))
+    }
+
+    fetchPerson()
+    fetchConversation()
+  }, [receiverId])
+
+  const handleChange = (e) => {
+    const { name, value } = e.target
+
+    setMsg((prevState) => ({ ...prevState, [name]: value }))
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    await axiosInstance
+      .post(`/messages`, { ...msg, to: person.phone })
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err))
+
+    setMsg({ text: '' })
+  }
 
   return (
     <div className="outlet-window">
       <header className="chat-header">
-        <p>{contact.phone}</p>
-        <p>
-          {contact.first_name} {contact.last_name}
-        </p>
+        <h1>{person.phone}</h1>
       </header>
       <main className="chat">
-        {messages.map((message) => {
+        {conversation.map((msg) => {
           return (
-            <div
-              className={
-                message.creatorId == contactId ? 'recieved-msg' : 'sent-msg'
-              }
-              key={message.id}
+            <p
+              key={msg.id}
+              className={msg.creatorId == user.id ? 'sent-msg' : 'recieved-msg'}
             >
-              <h3>
-                {message.creatorId === contactId
-                  ? `${contact.first_name} ${contact.last_name}`
-                  : `${user.first_name} ${user.last_name}`}
-              </h3>
-              <p>{message.text}</p>
-            </div>
+              {msg.text}
+            </p>
           )
         })}
       </main>
-      <footer className="chat-footer"></footer>
+      <footer className="chat-footer">
+        <form onSubmit={handleSubmit}>
+          <label htmlFor="text">send message</label>
+          <input
+            type="text"
+            name="text"
+            id="text"
+            value={msg.text}
+            onChange={handleChange}
+          />
+          <button type="submit">send</button>
+        </form>
+      </footer>
     </div>
   )
 }

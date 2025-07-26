@@ -8,29 +8,26 @@ export default function GroupWindow() {
   const { user } = useContext(AuthContext)
   const { groupId } = useParams()
   const [group, setGroup] = useState({})
-  const [messages, setMessages] = useState([])
+  const [conversation, setConversation] = useState([])
   const [msg, setMsg] = useState({ text: '' })
 
   useEffect(() => {
     const fetchGroup = async () => {
       await axiosInstance
-        .get(`/auth/groups/${groupId}`)
+        .get(`/groups/${groupId}`)
         .then((res) => setGroup(res.data))
         .catch((err) => console.log(err))
     }
 
-    const fetchMessages = async () => {
+    const fetchConversation = async () => {
       await axiosInstance
-        .get(`/auth/messages/groups/${groupId}`)
-        .then((res) => {
-          console.log(res.data)
-          setMessages(res.data)
-        })
+        .get(`/groups/${groupId}/messages`)
+        .then((res) => setConversation(res.data))
         .catch((err) => console.log(err))
     }
 
     fetchGroup()
-    fetchMessages()
+    fetchConversation()
   }, [groupId])
 
   const handleChange = (e) => {
@@ -43,7 +40,7 @@ export default function GroupWindow() {
     e.preventDefault()
 
     await axiosInstance
-      .post(`/auth/messages/groups/${groupId}`, msg)
+      .post(`/groups/${groupId}/messages`, msg)
       .then((res) => console.log(res))
       .catch((err) => console.log(err))
 
@@ -53,28 +50,17 @@ export default function GroupWindow() {
   return (
     <div className="outlet-window">
       <header className="chat-header">
-        <p>{group.name}</p>
-        <p>
-          {group.admin?.phone},{' '}
-          {group.members?.map((member) => member.phone + ',')}
-        </p>
+        <h1>{group.name}</h1>
       </header>
       <main className="chat">
-        {messages.map((message) => {
+        {conversation.map((msg) => {
           return (
-            <div
-              className={
-                message.creatorId == user.id ? 'sent-msg' : 'recieved-msg'
-              }
-              key={message.id}
+            <p
+              key={msg.id}
+              className={msg.creatorId == user.id ? 'sent-msg' : 'recieved-msg'}
             >
-              <h3>
-                {message.creatorId == user.id
-                  ? `${user.first_name} ${user.last_name}`
-                  : ''}
-              </h3>
-              <p>{message.text}</p>
-            </div>
+              {msg.text}
+            </p>
           )
         })}
       </main>

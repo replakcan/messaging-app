@@ -9,7 +9,7 @@ export default function ContactsContainer() {
   useEffect(() => {
     const fetchDistinctConversations = async () => {
       await axiosInstance
-        .get('/auth/me/distinct-conversations')
+        .get('/auth/me/conversations')
         .then((res) => setDistinctConversations(res.data))
         .catch((err) => console.log(err))
     }

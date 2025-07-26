@@ -1,8 +1,12 @@
 import { useParams } from 'react-router'
 import '../styles/chat-window.css'
+import '../styles/root.css'
 import { useContext, useEffect, useState } from 'react'
 import { axiosInstance } from '../api/axios-instance'
 import AuthContext from '../contexts/auth-context'
+import ConversationHeader from '../components/conversation-window-header'
+import ConversationChat from '../components/conversation-window-chat'
+import ConversationFooter from '../components/conversation-window-footer'
 
 export default function GroupWindow() {
   const { user } = useContext(AuthContext)
@@ -49,34 +53,13 @@ export default function GroupWindow() {
 
   return (
     <div className="outlet-window">
-      <header className="chat-header">
-        <h1>{group.name}</h1>
-      </header>
-      <main className="chat">
-        {conversation.map((msg) => {
-          return (
-            <p
-              key={msg.id}
-              className={msg.creatorId == user.id ? 'sent-msg' : 'recieved-msg'}
-            >
-              {msg.text}
-            </p>
-          )
-        })}
-      </main>
-      <footer className="chat-footer">
-        <form onSubmit={handleSubmit}>
-          <label htmlFor="text">send message</label>
-          <input
-            type="text"
-            name="text"
-            id="text"
-            value={msg.text}
-            onChange={handleChange}
-          />
-          <button type="submit">send</button>
-        </form>
-      </footer>
+      <ConversationHeader target={group} />
+      <ConversationChat conversation={conversation} user={user} />
+      <ConversationFooter
+        onSubmit={handleSubmit}
+        onChange={handleChange}
+        msg={msg}
+      />
     </div>
   )
 }

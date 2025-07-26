@@ -5,6 +5,8 @@ import ChatWindow from './routes/chat-window'
 import Root from './routes/root'
 import GroupWindow from './routes/group-window'
 import IndexWindow from './routes/index-window'
+import GroupInfo from './routes/group-info'
+import ChatterInfo from './routes/chatter-info'
 
 const routes = [
   {
@@ -20,6 +22,14 @@ const routes = [
       {
         path: 'group/:groupId',
         element: <GroupWindow />,
+      },
+      {
+        path: 'group/:groupId/info',
+        element: <GroupInfo />,
+      },
+      {
+        path: 'chat/:receiverId/info',
+        element: <ChatterInfo />,
       },
     ],
   },

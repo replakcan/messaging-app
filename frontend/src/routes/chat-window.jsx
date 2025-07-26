@@ -1,14 +1,12 @@
 import { useParams } from 'react-router'
 import '../styles/chat-window.css'
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { axiosInstance } from '../api/axios-instance'
-import AuthContext from '../contexts/auth-context'
 import ConversationHeader from '../components/conversation-window-header'
 import ConversationChat from '../components/conversation-window-chat'
 import ConversationFooter from '../components/conversation-window-footer'
 
 export default function ChatWindow() {
-  const { user } = useContext(AuthContext)
   const { receiverId } = useParams()
   const [person, setPerson] = useState({})
   const [conversation, setConversation] = useState([])

@@ -1,0 +1,25 @@
+.group-info-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  padding: 1rem;
+  overflow: scroll;
+  justify-content: space-between;
+  background-color: rgb(255, 230, 0);
+}
+
+.group-info-container > * {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+}
+
+.group-info-container img {
+  border: 1px solid yellowgreen;
+  width: 200px;
+  aspect-ratio: 1;
+  border-radius: 10rem;
+  background-color: yellowgreen;
+}

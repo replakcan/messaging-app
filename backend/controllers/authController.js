@@ -142,3 +142,24 @@ exports.getDistinctConversationRecievers = async (req, res, next) => {
     next(error)
   }
 }
+
+exports.getMessagesDistinctConversation = async (req, res, next) => {
+  const { id: userId } = req.user
+  const { conId } = req.params
+
+  try {
+    const messages = await prisma.message.findMany({
+      where: {
+        OR: [
+          { creatorId: userId, recieverId: conId },
+          { creatorId: conId, recieverId: userId },
+        ],
+      },
+      orderBy: { createdAt: 'asc' },
+    })
+
+    res.json(messages)
+  } catch (error) {
+    next(error)
+  }
+}

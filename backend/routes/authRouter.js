@@ -8,9 +8,11 @@ authRouter
   .patch(authConroller.editUserInfo)
   .delete(authConroller.deleteAccount)
 
+authRouter.get('/conversations', authConroller.getDistinctConversationRecievers)
+
 authRouter.get(
-  '/distinct-conversations',
-  authConroller.getDistinctConversationRecievers,
+  '/conversations/:conId',
+  authConroller.getMessagesDistinctConversation
 )
 
 module.exports = authRouter

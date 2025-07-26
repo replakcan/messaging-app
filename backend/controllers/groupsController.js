@@ -79,7 +79,7 @@ exports.editGroupById = async (req, res, next) => {
 
   if (adminId !== userId)
     throw new ForbiddenError(
-      'You cannot edit a group that you are not an admin of',
+      'You cannot edit a group that you are not an admin of'
     )
 
   try {
@@ -103,7 +103,7 @@ exports.deleteGroupById = async (req, res, next) => {
 
   if (adminId !== userId)
     throw new ForbiddenError(
-      'You cannot delete a group that you are not an admin of',
+      'You cannot delete a group that you are not an admin of'
     )
 
   try {
@@ -136,6 +136,7 @@ exports.getAllGroupMessages = async (req, res, next) => {
   try {
     const messages = await prisma.message.findMany({
       where: { groupId },
+      orderBy: { createdAt: 'asc' },
     })
 
     res.json(messages)
@@ -226,7 +227,7 @@ exports.removeExistingMember = async (req, res, next) => {
 
   if (adminId !== userId)
     throw new ForbiddenError(
-      'Only group admins are allowed to remove existing members',
+      'Only group admins are allowed to remove existing members'
     )
 
   try {
@@ -263,7 +264,7 @@ exports.deleteGroupByIdLogic = async (groupId, userId) => {
 
   if (group.adminId !== userId) {
     throw new ForbiddenError(
-      'You cannot delete a group that you are not an admin of',
+      'You cannot delete a group that you are not an admin of'
     )
   }
 

@@ -18,7 +18,7 @@ app.use(express.urlencoded({ extended: true }))
 
 app.use(passport.initialize())
 
-app.use('/auth', isAuth, authRouter)
+app.use('/auth/me', isAuth, authRouter)
 app.use('/contacts', isAuth, contactsRouter)
 app.use('/groups', isAuth, groupsRouter)
 app.use('/messages', isAuth, messagesRouter)

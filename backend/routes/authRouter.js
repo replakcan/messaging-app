@@ -3,7 +3,7 @@ const authRouter = Router()
 const authConroller = require('../controllers/authController')
 
 authRouter
-  .route('/me')
+  .route('/')
   .get(authConroller.getAllUserInfo)
   .patch(authConroller.editUserInfo)
   .delete(authConroller.deleteAccount)

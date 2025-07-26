@@ -255,3 +255,32 @@ exports.removeExistingMember = async (req, res, next) => {
     next(error)
   }
 }
+
+exports.deleteGroupByIdLogic = async (groupId, userId) => {
+  const group = await prisma.group.findFirstOrThrow({
+    where: { id: groupId },
+  })
+
+  if (group.adminId !== userId) {
+    throw new ForbiddenError(
+      'You cannot delete a group that you are not an admin of'
+    )
+  }
+
+  await prisma.group.update({
+    where: { id: groupId },
+    data: {
+      members: {
+        set: [],
+      },
+    },
+  })
+
+  await prisma.message.deleteMany({
+    where: { groupId },
+  })
+
+  await prisma.group.delete({
+    where: { id: groupId },
+  })
+}

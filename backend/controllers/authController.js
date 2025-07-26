@@ -81,3 +81,64 @@ exports.deleteAccount = async (req, res, next) => {
     next(error)
   }
 }
+
+exports.getDistinctConversationRecievers = async (req, res, next) => {
+  const { user } = req
+
+  try {
+    const distinctSenders = await prisma.message.findMany({
+      where: { recieverId: user.id },
+      distinct: ['creatorId'],
+      select: { creator: { select: { id: true, phone: true } } },
+    })
+
+    const sentMessages = await prisma.message.findMany({
+      where: { creatorId: user.id },
+      select: {
+        reciever: { select: { id: true, phone: true } },
+        group: { select: { id: true, name: true } },
+      },
+    })
+
+    const senders = distinctSenders.map((m) => ({
+      id: m.creator.id,
+      value: m.creator.phone,
+      type: 'user',
+    }))
+
+    const recievers = sentMessages
+      .map((m) => {
+        if (m.reciever) {
+          return {
+            id: m.reciever.id,
+            value: m.reciever.phone,
+            type: 'user',
+          }
+        }
+        if (m.group) {
+          return {
+            id: m.group.id,
+            value: m.group.name,
+            type: 'group',
+          }
+        }
+        return null
+      })
+      .filter(Boolean)
+
+    const all = [...senders, ...recievers]
+    const uniqueMap = new Map()
+
+    for (const item of all) {
+      if (!uniqueMap.has(item.id)) {
+        uniqueMap.set(item.id, item)
+      }
+    }
+
+    const uniqueValues = Array.from(uniqueMap.values())
+
+    res.json(uniqueValues)
+  } catch (error) {
+    next(error)
+  }
+}

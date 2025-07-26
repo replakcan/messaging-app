@@ -17,6 +17,13 @@
   flex-direction: column;
   gap: 1rem;
   padding: 0.5rem;
+  overflow: scroll;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.chat::-webkit-scrollbar {
+  display: none;
 }
 
 .chat-footer {

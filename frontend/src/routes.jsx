@@ -14,7 +14,7 @@ const routes = [
     children: [
       { index: true, element: <IndexWindow /> },
       {
-        path: 'chat/:contactId',
+        path: 'chat/:receiverId',
         element: <ChatWindow />,
       },
       {

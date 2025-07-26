@@ -2,6 +2,10 @@ const { Router } = require('express')
 const authRouter = Router()
 const authConroller = require('../controllers/authController')
 
-authRouter.get('/all-user-info', authConroller.getAllUserInfo)
+authRouter
+  .route('/me')
+  .get(authConroller.getAllUserInfo)
+  .patch(authConroller.editUserInfo)
+  .delete(authConroller.deleteAccount)
 
 module.exports = authRouter

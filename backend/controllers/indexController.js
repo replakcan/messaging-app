@@ -55,15 +55,12 @@ exports.verifyCurrentUser = async (req, res, next) => {
 
   try {
     const currentUser = await prisma.user.findFirstOrThrow({
-      where: {
-        id,
-      },
-      omit: {
-        password: true,
-      },
+      where: { id },
     })
 
-    res.json(currentUser)
+    const { password, ...safeUser } = currentUser
+
+    res.json(safeUser)
   } catch (error) {
     next(error)
   }

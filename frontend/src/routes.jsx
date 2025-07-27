@@ -7,11 +7,16 @@ import GroupWindow from './routes/group-window'
 import IndexWindow from './routes/index-window'
 import GroupInfo from './routes/group-info'
 import ChatterInfo from './routes/chatter-info'
+import ProtectedRoute from './components/protected-route'
 
 const routes = [
   {
     path: '/',
-    element: <Root />,
+    element: (
+      <ProtectedRoute>
+        <Root />
+      </ProtectedRoute>
+    ),
     errorElement: <ErrorPage />,
     children: [
       { index: true, element: <IndexWindow /> },

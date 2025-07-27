@@ -9,7 +9,7 @@ export default function ChatterInfo() {
 
   useEffect(() => {
     const fetchCatterInfo = async () => {
-      axiosInstance
+      await axiosInstance
         .get(`/users/${receiverId}`)
         .then((res) => setChatter(res.data))
         .catch((err) => console.log(err))

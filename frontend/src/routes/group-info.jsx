@@ -9,7 +9,7 @@ export default function GroupInfo() {
 
   useEffect(() => {
     const fetchCatterInfo = async () => {
-      axiosInstance
+      await axiosInstance
         .get(`/groups/${groupId}`)
         .then((res) => setGroup(res.data))
         .catch((err) => console.log(err))

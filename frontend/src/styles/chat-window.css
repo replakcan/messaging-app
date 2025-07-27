@@ -8,8 +8,10 @@
 .chat-header {
   grid-area: 1 / 1 / 2 / -1;
   padding: 0.5rem;
-  background-color: rgba(0, 0, 0, 0.664);
-  color: white;
+  background-color: var(--color-bg-header);
+  color: var(--color-text-active-header);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+  z-index: 1;
 }
 
 .chat {
@@ -20,19 +22,15 @@
   height: 100%;
   padding: 1rem 0.5rem;
   overflow: scroll;
-  scrollbar-width: none;
   -ms-overflow-style: none;
-  background-color: rgb(255, 230, 0);
+  background-color: var(--color-bg-main);
 }
 
-.chat::-webkit-scrollbar {
-  display: none;
-}
 
 .chat-footer {
   grid-area: 3 / 1 / 4 / -1;
   padding: 0.5rem;
-  background-color: rgb(255, 230, 0);
+  background-color: var(--color-bg-main);
 }
 
 .chat-footer form {
@@ -44,11 +42,25 @@
 }
 
 .chat-footer input {
+  border: 1px solid var(--color-text-placeholder);
   border-radius: 1rem;
   padding: 0.5rem 3rem 0.3rem 1rem;
   width: 100%;
   right: 0;
   top: 0;
+  background-color: var(--color-text-light);
+  color: var(--color-text-input);
+}
+
+.chat-footer input::placeholder {
+  font-style: italic;
+  color: var(--color-text-placeholder);
+}
+
+.chat-footer input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(130, 170, 255, 0.4);
+  border: 1px solid var(--color-bg-chat-own);
 }
 
 .chat-footer button {
@@ -61,32 +73,46 @@
   border: none;
   background-color: inherit;
   transition: all 0.3s ease-in;
+  color: var(--color-text-placeholder);
 }
 
 .chat-footer button:hover {
   color: white;
-  background-color: greenyellow;
+  background-color: var(--color-btn-send);
   cursor: pointer;
 }
 
 .recieved-msg,
 .sent-msg {
-  border: 1px solid greenyellow;
-  background-color: greenyellow;
   border-radius: 0.4rem;
-  padding: 0.2rem 0.2em;
-  max-width: 50%;
   color: black;
+  padding: 0.5rem 1rem;
+  border-radius: 1rem;
+  max-width: 60%;
+  word-wrap: break-word;
+  margin: 0.25rem 0;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 }
 
 .recieved-msg,
 .recieved-msg > * {
   text-align: left;
   margin-right: auto;
+  background-color: var(--color-bg-chat-other);
+  color: var(--color-text-message-other);
 }
 
 .sent-msg,
 .sent-msg > * {
   text-align: right;
   margin-left: auto;
+  background-color: var(--color-bg-chat-own);
+  color: var(--color-text-message-own);
+}
+
+.conversation-card.active {
+  background-color: var(--color-bg-sidebar-active);
+  font-weight: bold;
+  border-left: 4px solid var(--color-bg-chat-own);
+  box-shadow: inset 4px 0 0 var(--color-bg-chat-own);
 }

@@ -6,7 +6,8 @@
   padding: 1rem;
   overflow: scroll;
   justify-content: space-between;
-  background-color: rgb(255, 230, 0);
+  background-color: var(--color-bg-header);
+  color: var(--color-text-sidebar);
 }
 
 .chatter-info-container > * {
@@ -14,14 +15,16 @@
   display: flex;
   flex-direction: column;
   padding: 1rem;
+  border: 1px solid var(--color-info-border);
+  border-radius: 1rem;
 }
 
 .chatter-info-container img {
-  border: 1px solid yellowgreen;
+  border: 1px solid var(--color-bg-chat-own);
   width: 200px;
   aspect-ratio: 1;
   border-radius: 10rem;
-  background-color: yellowgreen;
+  background-color: var(--color-bg-chat-own);
 }
 
 .profile-container {

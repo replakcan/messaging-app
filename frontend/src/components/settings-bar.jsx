@@ -1,13 +1,19 @@
-import { useContext } from 'react'
 import '../styles/settings-bar.css'
-import AuthContext from '../contexts/auth-context'
+import { Cat, MessageSquare, Rss, Settings, UsersRound } from 'lucide-react'
 
 export default function SettingsBar() {
-  const { user } = useContext(AuthContext)
-
   return (
     <div className="settings-container">
-      <p>{user.first_name}</p>
+      <div className='first-icon-group'>
+        <MessageSquare size={40} />
+        <Cat size={40} />
+        <Rss size={40} />
+        <UsersRound size={40} />
+      </div>
+      <div className='last-icon-group'>
+        <Settings size={40} />
+        <img src="placeholder" alt="" />
+      </div>
     </div>
   )
 }

@@ -1,11 +1,12 @@
 import { useContext } from 'react'
-import AuthContext from '../contexts/auth-context'
+import UserContext from '../contexts/user-context'
 
 export default function ChatMessage({ msg }) {
-  const { user } = useContext(AuthContext)
+  const { state } = useContext(UserContext)
+  const { user } = state
 
   return (
-    <div className={msg.creatorId == user.id ? 'sent-msg' : 'recieved-msg'}>
+    <div className={msg.creatorId == user?.id ? 'sent-msg' : 'recieved-msg'}>
       <p>{msg.text}</p>
     </div>
   )

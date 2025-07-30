@@ -1,15 +1,13 @@
 import { useParams } from 'react-router'
 import '../styles/chat-window.css'
 import '../styles/root.css'
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { axiosInstance } from '../api/axios-instance'
-import AuthContext from '../contexts/auth-context'
 import ConversationHeader from '../components/conversation-window-header'
 import ConversationChat from '../components/conversation-window-chat'
 import ConversationFooter from '../components/conversation-window-footer'
 
 export default function GroupWindow() {
-  const { user } = useContext(AuthContext)
   const { groupId } = useParams()
   const [group, setGroup] = useState({})
   const [conversation, setConversation] = useState([])
@@ -54,7 +52,7 @@ export default function GroupWindow() {
   return (
     <div className="outlet-window">
       <ConversationHeader target={group} />
-      <ConversationChat conversation={conversation} user={user} />
+      <ConversationChat conversation={conversation} />
       <ConversationFooter
         onSubmit={handleSubmit}
         onChange={handleChange}

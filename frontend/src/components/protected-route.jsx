@@ -20,6 +20,7 @@ export default function ProtectedRoute({ children }) {
       try {
         const res = await axiosInstance.get('/verify')
         setUser(res.data)
+      // eslint-disable-next-line no-unused-vars
       } catch (error) {
         localStorage.removeItem('token')
         navigate('/login', { replace: true })

@@ -1,0 +1,33 @@
+.settings-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.5rem;
+  color: white;
+}
+
+.settings-container > div {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.settings-container > div > * {
+  width: 50px;
+}
+
+.settings-container img {
+  width: 50px;
+  aspect-ratio: 1;
+  border: 1px solid var(--color-bg-header);
+  border-radius: 5rem;
+  background-color: var(--color-bg-header);
+}
+
+.first-icon-group {
+  margin-bottom: auto;
+}
+
+.last-icon-group {
+  margin-top: auto;
+}

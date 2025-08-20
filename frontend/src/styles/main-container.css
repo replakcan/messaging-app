@@ -1,8 +1,9 @@
 .main-container {
   display: grid;
-  height: 100vh;
-  grid-template-columns: minmax(50px, 3%) minmax(350px, 28%) 1fr;
-  grid-template-rows: minmax(150px, 15%) 85%;
+  height: 100dvh;
+  width: 100vw;
+  grid-template-columns: minmax(50px, 3%) 300px 1fr;
+  grid-template-rows: minmax(150px, 15%) 1fr;
 }
 
 .outlet-container {

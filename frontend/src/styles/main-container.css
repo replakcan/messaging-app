@@ -1,0 +1,30 @@
+.main-container {
+  display: grid;
+  height: 100dvh;
+  width: 100vw;
+  grid-template-columns: minmax(50px, 3%) 300px 1fr;
+  grid-template-rows: minmax(150px, 15%) 1fr;
+}
+
+.outlet-container {
+  grid-area: 1 / 3 / -1 / -1;
+  background-color: var(--color-bg-main);
+}
+
+.contacts-container {
+  grid-area: 2 / 2 / -1 / 3;
+  background-color: var(--color-bg-sidebar);
+  color: var(--color-text-sidebar);
+  box-shadow: 1px 0 3px rgba(0, 0, 0, 0.08);
+  overflow: scroll;
+}
+
+.filters-container {
+  grid-area: 1 / 2 / 2 / 3;
+  padding: 0 1rem;
+}
+
+.settings-container {
+  grid-area: 1 / 1 / -1 / 2;
+  background-color: #2f3e46;
+}

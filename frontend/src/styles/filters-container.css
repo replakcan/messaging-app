@@ -1,0 +1,74 @@
+.filters-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.filters-container header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.filters-container .icon-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.filters-container input {
+  border: 1px solid var(--color-text-placeholder);
+  border-radius: 1rem;
+  width: 100%;
+  right: 0;
+  top: 0;
+  background-color: var(--color-text-light);
+  color: var(--color-text-input);
+  display: flex;
+  padding-left: 1rem;
+}
+
+.filters-container input::placeholder {
+  font-style: italic;
+  color: var(--color-text-placeholder);
+  font-size: medium;
+}
+
+.filters-container input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(130, 170, 255, 0.4);
+  border: 1px solid var(--color-bg-chat-own);
+}
+
+.chat-filters {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.chat-filters {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.chat-filters button {
+  padding: 0.4rem 0.9rem;
+  background-color: transparent;
+  color: #ccc;
+  border: 1px solid #444;
+  border-radius: 1rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.chat-filters button:hover {
+  background-color: #2a2a2a;
+  border-color: #555;
+}
+
+.chat-filters button.active {
+  background-color: #1c1c1c;
+  color: #0fdf9a;
+  border-color: #0fdf9a;
+}

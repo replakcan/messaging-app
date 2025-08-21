@@ -19,17 +19,17 @@ model User {
   first_name        String
   last_name         String
   age               Int
-  email             String
+  email             String    @unique
   password          String
-  phone             String
-  status            Status
-  status_message    String
+  phone             String    @unique
+  status            Status    @default(ONLINE)
+  status_message    String?
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
   messages_sent     Message[] @relation("SentMessage")
   messages_recieved Message[] @relation("RecievedMessage")
-  friends           User[]    @relation("UserFriends")
-  friendOf          User[]    @relation("UserFriends")
+  contacts          User[]    @relation("UserContacts")
+  contactsOf        User[]    @relation("UserContacts")
   adminOfGroups     Group[]   @relation("GroupAdmin")
   memberOfGroups    Group[]   @relation("GroupMember")
 }
@@ -38,22 +38,25 @@ model Message {
   id         String   @id @default(uuid())
   creator    User     @relation("SentMessage", fields: [creatorId], references: [id])
   creatorId  String
-  reciever   User     @relation("RecievedMessage", fields: [recieverId], references: [id])
-  recieverId String
+  reciever   User?    @relation("RecievedMessage", fields: [recieverId], references: [id])
+  recieverId String?
+  group      Group?   @relation(fields: [groupId], references: [id])
+  groupId    String?
   text       String
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }
 
 model Group {
-  id          String   @id @default(uuid())
+  id          String    @id @default(uuid())
   name        String
   description String?
-  admin       User     @relation("GroupAdmin", fields: [adminId], references: [id])
+  admin       User      @relation("GroupAdmin", fields: [adminId], references: [id])
   adminId     String
-  members     User[]   @relation("GroupMember")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  members     User[]    @relation("GroupMember")
+  messages    Message[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
 enum Status {

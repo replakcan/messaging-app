@@ -3,10 +3,7 @@ const fs = require('node:fs')
 const path = require('node:path')
 const jwt = require('jsonwebtoken')
 
-const privateKey = fs.readFileSync(
-  path.resolve(process.env.PRIVATE_KEY_PATH),
-  'utf8',
-)
+const privateKey = process.env.PRIVATE_KEY.replace(/\\n/g, '\n')
 
 const generateToken = (user) => {
   const payload = {

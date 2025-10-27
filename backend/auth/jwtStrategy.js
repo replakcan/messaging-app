@@ -5,10 +5,7 @@ const path = require('node:path')
 const passport = require('passport')
 const prisma = require('../lib/prisma')
 
-const publicKey = fs.readFileSync(
-  path.resolve(process.env.PUBLIC_KEY_PATH),
-  'utf-8',
-)
+const publicKey = process.env.PUBLIC_KEY
 
 const opts = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),

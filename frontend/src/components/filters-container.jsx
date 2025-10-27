@@ -1,12 +1,14 @@
 import { EllipsisVertical, MessageSquarePlus } from 'lucide-react'
 import '../styles/filters-container.css'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import UserContext from '../contexts/user-context'
 import { ACTIONS } from '../reducers/user-reducer'
+import NewChatCreatorDialog from './new-chat-creator-dialog'
 
 export default function FiltersContainer() {
   const { state, dispatch } = useContext(UserContext)
   const { activeFilter } = state
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   const handleAllClick = () => {
     dispatch({ type: ACTIONS.RESET_FILTERS })
@@ -16,12 +18,21 @@ export default function FiltersContainer() {
     dispatch({ type: ACTIONS.FILTER_CONTACTS_BY_TYPE, payload: 'group' })
   }
 
+  const handleNewMessageClick = () => {
+    setIsDialogOpen(true)
+  }
+
+  const handleNewMessageDialogCloseClick = () => {
+    setIsDialogOpen(false)
+  }
+
   return (
     <div className="filters-container">
+      <NewChatCreatorDialog isDialogOpen={isDialogOpen} onCloseDialogClick={handleNewMessageDialogCloseClick} />
       <header>
         <h3 className="app-name">MesajApp</h3>
         <div className="icon-group">
-          <MessageSquarePlus />
+          <MessageSquarePlus onClick={handleNewMessageClick} />
           <EllipsisVertical />
         </div>
       </header>

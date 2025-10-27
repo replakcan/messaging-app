@@ -1,0 +1,16 @@
+.new-convo-dialog {
+    position: relative;
+    padding-right: 2rem;
+}
+
+.new-convo-dialog form {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.new-convo-close-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
